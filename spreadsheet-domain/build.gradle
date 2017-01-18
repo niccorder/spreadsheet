@@ -1,0 +1,17 @@
+apply from: "$rootDir/config.gradle"
+apply plugin: 'java'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+  javaVersion JavaVersion.VERSION_1_7
+}
+
+dependencies {
+  compile project.ext.rxjava
+  compile project.ext.guava
+  compile project(':spreadsheet-util:spreadsheet-exception')
+}
+
+repositories {
+  jcenter()
+}
