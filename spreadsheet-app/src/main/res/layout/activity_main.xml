@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.activity.MainActivity"
+    >
+
+  <!-- Coordinator layout to provide fab button with animation -->
+  <android.support.design.widget.CoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/background"
+      >
+
+    <!-- Appbar layout to attach the input field, and buttons to the action bar.-->
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.Spreadsheet.AppBarOverlay"
+        >
+
+      <!-- Toolbar necessary for app compat. -->
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          app:popupTheme="@style/Theme.Spreadsheet.PopupOverlay"
+          app:title="@string/app_name"
+          />
+
+      <!-- Frame layout allows us to show shadow under edit text (mat. design) -->
+      <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="?actionBarSize"
+          android:clipToPadding="false"
+          >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+          <ImageView
+              android:id="@+id/new_row_btn"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/keyline_1"
+              android:layout_marginRight="@dimen/keyline_1"
+              android:layout_toLeftOf="@+id/new_column_btn"
+              android:layout_toStartOf="@+id/new_column_btn"
+              android:tint="@color/io15_white"
+              app:srcCompat="@drawable/ic_vertical_align_bottom_black_24dp"
+              />
+
+          <ImageView
+              android:id="@+id/new_column_btn"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/keyline_1"
+              android:layout_marginRight="@dimen/keyline_1"
+              android:tint="@color/io15_white"
+              app:srcCompat="@drawable/ic_keyboard_tab_black_24dp"
+              />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/keyline_1_minus_8dp"
+            android:background="@color/background"
+            android:paddingBottom="@dimen/keyline_1"
+            android:paddingTop="@dimen/keyline_1"
+            app:cardElevation="@dimen/fab_press_translation_z"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            >
+          <EditText
+              android:id="@+id/input"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background"
+              android:layout_margin="2dp"
+              android:maxLines="1"
+              android:textColor="@color/app_body_text_2"
+              android:theme="@style/SearchViewTheme"
+              tools:text="hello World."
+              />
+        </android.support.v7.widget.CardView>
+      </FrameLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <!-- Nested scroll view works well with FAB, but is required for project :)-->
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:scrollbars="horizontal"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+      <!--Use a recyclerview for preformance. -->
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/recycler"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:padding="@dimen/keyline_1_minus_8dp"
+          />
+    </android.support.v4.widget.NestedScrollView>
+
+    <!-- Undo fab, hidden with coordinator layout-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@color/io15_white"
+        app:elevation="@dimen/fab_elevation"
+        app:pressedTranslationZ="@dimen/fab_press_translation_z"
+        app:rippleColor="@color/fab_press_ripple"
+        app:srcCompat="@drawable/ic_undo_black_24dp"
+        />
+  </android.support.design.widget.CoordinatorLayout>
+
+  <!-- Navigation drawer whom inflates our custom layout.-->
+  <android.support.design.widget.NavigationView
+      android:id="@+id/navigation_view"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      app:headerLayout="@layout/layout_header"
+      app:menu="@menu/main"
+      />
+
+</android.support.v4.widget.DrawerLayout>

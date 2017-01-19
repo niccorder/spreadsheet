@@ -1,6 +1,7 @@
 apply from: "$rootDir/config.gradle"
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'realm-android'
 
 repositories {
   jcenter()
@@ -90,8 +91,6 @@ dependencies {
 
   compile project(':spreadsheet-util:spreadsheet-inject')
   compile project(':spreadsheet-util:spreadsheet-exception')
-  compile project(':spreadsheet-domain')
-  compile project(':spreadsheet-data')
 
   androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2',
       { exclude group: 'com.android.support', module: 'support-annotations' })
