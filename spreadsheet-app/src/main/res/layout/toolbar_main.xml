@@ -41,7 +41,7 @@
           android:layout_marginRight="@dimen/keyline_1"
           android:layout_toLeftOf="@+id/new_column_btn"
           android:layout_toStartOf="@+id/new_column_btn"
-          android:background="?selectableItemBackground"
+          android:background="?selectableItemBackgroundBorderless"
           android:tint="@color/io15_white"
           app:srcCompat="@drawable/ic_vertical_align_bottom_black_24dp"
           />
@@ -55,7 +55,7 @@
           android:layout_centerVertical="true"
           android:layout_marginEnd="@dimen/keyline_1"
           android:layout_marginRight="@dimen/keyline_1"
-          android:background="?selectableItemBackground"
+          android:background="?selectableItemBackgroundBorderless"
           android:tint="@color/io15_white"
           app:srcCompat="@drawable/ic_keyboard_tab_black_24dp"
           />

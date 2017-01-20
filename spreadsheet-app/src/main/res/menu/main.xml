@@ -12,7 +12,7 @@
       android:title="@string/save"/>
 
   <item
-      android:id="@+id/item_checkout"
+      android:id="@+id/item_clear"
       android:icon="@drawable/ic_clear_black_24dp"
       android:title="@string/clear"/>
 
