@@ -10,6 +10,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -40,15 +41,10 @@ import me.niccorder.spreadsheet.app.di.compontents.DaggerActivityComponent;
 import me.niccorder.spreadsheet.app.di.module.ActivityModule;
 import me.niccorder.spreadsheet.app.model.SpreadsheetModel;
 import me.niccorder.spreadsheet.app.pres.CellGridPresenter;
-import me.niccorder.spreadsheet.app.pres.impl.CellGridPresenterImpl;
 import me.niccorder.spreadsheet.app.view.GridView;
 import me.niccorder.spreadsheet.app.view.MenuView;
 import me.niccorder.spreadsheet.app.view.ui.SpreadsheetView;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -326,7 +322,7 @@ public class MainActivity extends AbstractActivity implements GridView {
 
   private void showAvailableDialog(List<String> items, List<SpreadsheetModel> models) {
     Timber.d("showAvailableDialog()");
-    new AlertDialog.Builder(this, R.style.Theme_Spreadsheet_Light).setAdapter(
+    new AlertDialog.Builder(this).setAdapter(
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items), (dialog, which) -> {
           mPresenter.loadGrid(models.get(which).getId());
           dialog.dismiss();
@@ -339,6 +335,10 @@ public class MainActivity extends AbstractActivity implements GridView {
         .setAction("Retry", v -> mPresenter.onLoadSelected())
         .setActionTextColor(ContextCompat.getColor(this, R.color.app_green))
         .show();
+  }
+
+  @Override public void displaySaveSuccess() {
+    Snackbar.make(mCoordinatorLayout, "Saved.", Snackbar.LENGTH_SHORT).show();
   }
 
   @Override public void clearGrid() {

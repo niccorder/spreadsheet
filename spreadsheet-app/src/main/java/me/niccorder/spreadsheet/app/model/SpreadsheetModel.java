@@ -61,10 +61,12 @@ public class SpreadsheetModel {
 
   public void updateCell(int x, int y, String cellData) {
     long key = (x + 1) * (y + 1);
-    final CellModel model = !data.containsKey(key) ? new CellModel() : data.get(key);
+    final CellModel model = !data.containsKey(key) ? new CellModel(x, y) : data.get(key);
 
+    model.updateData(cellData);
     setLastEditTimestamp();
-    data.put(key, new CellModel(x, y, cellData));
+    history.push(key);
+    data.put(key, model);
   }
 
   public String getCellData(int x, int y) {

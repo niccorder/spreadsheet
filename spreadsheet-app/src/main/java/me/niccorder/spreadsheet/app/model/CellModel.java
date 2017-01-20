@@ -66,7 +66,7 @@ public class CellModel {
 
   /** @return the most current data for the cell, or null if there is none. */
   public String getCurrentData() {
-    if (history != null) {
+    if (history != null && history.size() > 0) {
       return history.peek();
     }
     return null;
@@ -81,12 +81,11 @@ public class CellModel {
   }
 
   public String undo() {
+    if (history == null || history.size() == 0) {
+      return null;
+    }
     history.pop();
     return history.peek();
-  }
-
-  public Deque<String> getHistory() {
-    return history;
   }
 
   public void setHistory(Deque<String> history) {

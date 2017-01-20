@@ -39,4 +39,6 @@ public interface GridView extends MenuView {
   String getCurrentInputText();
 
   void setCurrentInput(String data);
+
+  void displaySaveSuccess();
 }

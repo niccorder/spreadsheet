@@ -69,8 +69,10 @@ import me.niccorder.spreadsheet.app.R;
     }
   }
 
+  /** Empties this cell for reuse */
   /* package private */ void clearCell() {
     setSelected(false);
+    textView.setText(null);
     this.data = null;
   }
 

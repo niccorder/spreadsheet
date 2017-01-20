@@ -1,5 +1,6 @@
 package me.niccorder.spreadsheet.app.pres.impl;
 
+import android.text.TextUtils;
 import java.util.List;
 import javax.inject.Inject;
 import me.niccorder.spreadsheet.app.data.SpreadsheetRepository;
@@ -70,8 +71,13 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
   @Override public void onCellClick(int x, int y) {
     if (isEditing) {
       view.unfocusPosition(currentFocus[0], currentFocus[1]);
-      spreadsheetModel.updateCell(currentFocus[0], currentFocus[1], view.getCurrentInputText());
-      view.updatePositionText(currentFocus[0], currentFocus[1], view.getCurrentInputText());
+
+      final String inputText = view.getCurrentInputText();
+      if (!TextUtils.equals(inputText,
+          spreadsheetModel.getCellData(currentFocus[0], currentFocus[1]))) {
+        spreadsheetModel.updateCell(currentFocus[0], currentFocus[1], view.getCurrentInputText());
+        view.updatePositionText(currentFocus[0], currentFocus[1], view.getCurrentInputText());
+      }
     }
 
     isEditing = true;
@@ -91,7 +97,7 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
 
   @Override public void addColumn() {
     Timber.d("addColumn()");
-    spreadsheetModel.setRows(spreadsheetModel.getColumns() + 1);
+    spreadsheetModel.setColumns(spreadsheetModel.getColumns() + 1);
     view.addColumns(1);
   }
 
@@ -116,8 +122,7 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
         Timber.e("Could not save the spreadsheet.");
         view.showDataRetrievalError(true);
       } else {
-        spreadsheetModel = new SpreadsheetModel();
-        view.clearGrid();
+        view.displaySaveSuccess();
       }
     }, throwable -> Timber.e(throwable, "saveGrid()"));
   }
@@ -146,8 +151,9 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
       spreadsheetModel = spreadsheet;
       isLoading = false;
       view.showLoading(false);
+      parseLoadedData(spreadsheet);
     }, throwable -> {
-      Timber.w(throwable, "loadGrid Failure.");
+      Timber.w(throwable, "loadGrid(%d) Failure.", id);
       isLoading = false;
       view.showLoading(false);
       view.showDataRetrievalError(true);
@@ -155,7 +161,24 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
   }
 
   private void parseLoadedData(final SpreadsheetModel model) {
-    // TODO: 1/20/17  
+    spreadsheetModel = model;
+    int rows = spreadsheetModel.getRows();
+    int cols = spreadsheetModel.getColumns();
+
+    // Clear any current data & adjust rows/cols
+    view.clearGrid();
+    view.addRows(8 - rows);
+    view.addColumns(8 - cols);
+
+    // Set loaded data to grid.
+    for (int i = 0; i < rows; ++i) {
+      for (int j = 0; j < cols; ++j) {
+        final String data = spreadsheetModel.getCellData(i, j);
+        Timber.d("loading (%d, %d) = %s", i, j, data);
+
+        view.updatePositionText(i, j, data);
+      }
+    }
   }
 
   @Override public void onLoadSelected() {
