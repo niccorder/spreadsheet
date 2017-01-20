@@ -7,9 +7,15 @@ public interface CellGridPresenter<T extends GridView & MenuView> extends Presen
 
   void onCellClick(int x, int y);
 
-  void onAddRowClick();
+  void addRow();
 
-  void onAddColumnClick();
+  void addColumn();
 
-  void onUndoClick();
+  void undo();
+
+  void saveGrid();
+
+  void clearGrid();
+
+  void onFinishedEditing();
 }

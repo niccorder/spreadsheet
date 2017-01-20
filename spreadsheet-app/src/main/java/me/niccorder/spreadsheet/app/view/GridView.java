@@ -16,4 +16,14 @@ public interface GridView extends MenuView {
   void closeEdit();
 
   void focusPosition(int x, int y);
+
+  void unfocusPosition(int x, int y);
+
+  void focusInputField();
+
+  void clearInputField();
+
+  void updatePositionText(int x, int y, String text);
+
+  void showNoMoreUndoMessage();
 }
