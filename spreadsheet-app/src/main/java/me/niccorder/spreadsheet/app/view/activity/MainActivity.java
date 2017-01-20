@@ -5,11 +5,15 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TableLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 import javax.inject.Inject;
@@ -20,13 +24,16 @@ import me.niccorder.spreadsheet.app.di.module.ActivityModule;
 import me.niccorder.spreadsheet.app.pres.impl.CellGridPresenterImpl;
 import me.niccorder.spreadsheet.app.view.GridView;
 import me.niccorder.spreadsheet.app.view.MenuView;
+import timber.log.Timber;
 
 /** Currently waiting to finish the first microservice endpoint to implement */
 public class MainActivity extends AbstractActivity implements GridView, MenuView {
 
   @Inject CellGridPresenterImpl mPresenter;
 
+  @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
   @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+  @BindView(R.id.table_layout) TableLayout mTable;
   @BindView(R.id.toolbar) Toolbar mToolbar;
 
   private ActionBarDrawerToggle mActionbarToggler;
@@ -152,9 +159,12 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
   }
 
   @Override public void showDataRetrievalError(boolean show) {
-
+    Snackbar.make(mCoordinatorLayout, "We had trouble spreadsheet.", Snackbar.LENGTH_LONG)
+        .setAction("Retry", v -> Timber.i("Retry loading."))
+        .setActionTextColor(ContextCompat.getColor(this, R.color.app_green));
   }
 
+  /** Dagger2 to inject dependencies into activity */
   private void injectDependencies() {
     mActivityComponent = DaggerActivityComponent.builder()
         .activityModule(new ActivityModule(this))
@@ -163,6 +173,7 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
     mActivityComponent.inject(this);
   }
 
+  /** A requirement for using the navigationo drawer layout */
   static class DrawerToggler extends ActionBarDrawerToggle {
 
     private Activity activity;

@@ -11,6 +11,7 @@
 
   <!-- Coordinator layout to provide fab button with animation -->
   <android.support.design.widget.CoordinatorLayout
+      android:id="@+id/coordinator_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/background"
@@ -108,23 +109,28 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
-      <TableLayout
+      <HorizontalScrollView
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:isScrollContainer="true"
+          android:layout_height="wrap_content"
           android:scrollbars="horizontal|vertical"
-          android:showDividers="middle"
           >
-        <!-- Temporary to help setup design.-->
-        <include layout="@layout/layout_row"/>
-        <include layout="@layout/layout_row"/>
-        <include layout="@layout/layout_row"/>
-        <include layout="@layout/layout_row"/>
-        <include layout="@layout/layout_row"/>
-        <include layout="@layout/layout_row"/>
-        <include layout="@layout/layout_row"/>
-        <include layout="@layout/layout_row"/>
-      </TableLayout>
+        <TableLayout
+            android:id="@+id/table_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:isScrollContainer="true"
+            >
+          <!-- Temporary to help setup design.-->
+          <include layout="@layout/layout_row"/>
+          <include layout="@layout/layout_row"/>
+          <include layout="@layout/layout_row"/>
+          <include layout="@layout/layout_row"/>
+          <include layout="@layout/layout_row"/>
+          <include layout="@layout/layout_row"/>
+          <include layout="@layout/layout_row"/>
+          <include layout="@layout/layout_row"/>
+        </TableLayout>
+      </HorizontalScrollView>
     </android.support.v4.widget.NestedScrollView>
 
     <!-- Undo fab, hidden with coordinator layout-->
