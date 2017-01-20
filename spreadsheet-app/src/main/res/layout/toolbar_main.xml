@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Appbar layout to attach the input field, and buttons to the action bar.-->
+<android.support.design.widget.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/Theme.Spreadsheet.AppBarOverlay"
+    tools:showIn="@layout/activity_main"
+    >
+
+  <!-- Toolbar necessary for app compat. -->
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      app:popupTheme="@style/Theme.Spreadsheet.PopupOverlay"
+      app:title="@string/app_name"
+      />
+
+  <!-- Frame layout allows us to show shadow under edit text (mat. design) -->
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="?actionBarSize"
+      android:clipToPadding="false"
+      >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+      <ImageView
+          android:id="@+id/new_row_btn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="@dimen/keyline_1"
+          android:layout_marginRight="@dimen/keyline_1"
+          android:layout_toLeftOf="@+id/new_column_btn"
+          android:layout_toStartOf="@+id/new_column_btn"
+          android:background="?selectableItemBackground"
+          android:tint="@color/io15_white"
+          app:srcCompat="@drawable/ic_vertical_align_bottom_black_24dp"
+          />
+
+      <ImageView
+          android:id="@+id/new_column_btn"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="@dimen/keyline_1"
+          android:layout_marginRight="@dimen/keyline_1"
+          android:background="?selectableItemBackground"
+          android:tint="@color/io15_white"
+          app:srcCompat="@drawable/ic_keyboard_tab_black_24dp"
+          />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/keyline_1_minus_8dp"
+        android:background="@color/background"
+        android:paddingBottom="@dimen/keyline_1"
+        android:paddingTop="@dimen/keyline_1"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="@dimen/fab_press_translation_z"
+        >
+      <EditText
+          android:id="@+id/input"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_margin="2dp"
+          android:background="@color/background"
+          android:maxLines="1"
+          android:textColor="@color/app_body_text_2"
+          android:theme="@style/SearchViewTheme"
+          tools:text="hello World."
+          />
+    </android.support.v7.widget.CardView>
+  </FrameLayout>
+
+</android.support.design.widget.AppBarLayout>

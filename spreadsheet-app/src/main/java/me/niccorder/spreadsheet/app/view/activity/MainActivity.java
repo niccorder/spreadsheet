@@ -24,6 +24,7 @@ import me.niccorder.spreadsheet.app.di.module.ActivityModule;
 import me.niccorder.spreadsheet.app.pres.impl.CellGridPresenterImpl;
 import me.niccorder.spreadsheet.app.view.GridView;
 import me.niccorder.spreadsheet.app.view.MenuView;
+import me.niccorder.spreadsheet.app.view.ui.SpreadsheetView;
 import timber.log.Timber;
 
 /** Currently waiting to finish the first microservice endpoint to implement */
@@ -33,7 +34,7 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
 
   @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
   @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-  @BindView(R.id.table_layout) TableLayout mTable;
+  @BindView(R.id.spreadsheet) SpreadsheetView mSpreadsheet;
   @BindView(R.id.toolbar) Toolbar mToolbar;
 
   private ActionBarDrawerToggle mActionbarToggler;
