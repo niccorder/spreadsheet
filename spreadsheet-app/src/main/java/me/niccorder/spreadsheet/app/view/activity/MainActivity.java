@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -220,6 +221,11 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
     public DrawerToggler(Activity activity, DrawerLayout drawerLayout,
         @StringRes int openDrawerContentDescRes, @StringRes int closeDrawerContentDescRes) {
       super(activity, drawerLayout, openDrawerContentDescRes, closeDrawerContentDescRes);
+
+      final DrawerArrowDrawable arrowDrawable = getDrawerArrowDrawable();
+      arrowDrawable.setColor(
+          ResourcesCompat.getColor(getResources(), R.color.app_white, getTheme()));
+      setDrawerArrowDrawable(arrowDrawable);
     }
 
     @Override public void onDrawerOpened(View drawerView) {
