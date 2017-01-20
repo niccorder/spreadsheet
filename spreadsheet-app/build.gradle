@@ -63,23 +63,22 @@ android {
 dependencies {
 
   compile project.ext.appcompatv7
-  compile project.ext.recyclerview
   compile project.ext.design
   compile project.ext.cardview
 
   compile project.ext.rxjava
   compile project.ext.rxandroid
   compile project.ext.rxbinding
-  compile project.ext.rxbinding_supportv4
-  compile project.ext.rxbinding_appcompatv7
-  compile project.ext.rxbinding_design
 
   compile project.ext.leakCanary
+  compile project.ext.sqlBrite
   compile project.ext.timber
 
   annotationProcessor project.ext.daggerProcessor
   annotationProcessor project.ext.butterknifeProcessor
+  annotationProcessor project.ext.autoValue
   provided project.ext.jsr
+  provided project.ext.autoValue
 
   compile project.ext.dagger
   compile project.ext.butterknife
