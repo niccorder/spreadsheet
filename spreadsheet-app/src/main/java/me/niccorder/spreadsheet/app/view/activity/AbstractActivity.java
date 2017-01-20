@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import butterknife.ButterKnife;
 import me.niccorder.spreadsheet.app.BaseApplication;
 import me.niccorder.spreadsheet.app.di.compontents.ApplicationComponent;
+import timber.log.Timber;
 
 /**
  * A base activity of which all child activities should extend from. This provides functionalities
@@ -29,6 +30,9 @@ public abstract class AbstractActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(provideLayoutId());
 
+    // Logging for debugging.
+    Timber.tag(provideLogTag()).i("onCreate()");
+
     // Injects view field members.
     ButterKnife.bind(this);
   }
@@ -36,15 +40,5 @@ public abstract class AbstractActivity extends AppCompatActivity {
   /** Get the Main Application component for dependency injection. */
   protected ApplicationComponent getApplicationComponent() {
     return ((BaseApplication) getApplication()).getApplicationComponent();
-  }
-
-  /** Slight helper method to add a fragment. */
-  protected void addFragment(@IdRes int containerViewId, Fragment fragment) {
-    getSupportFragmentManager().beginTransaction().add(containerViewId, fragment).commit();
-  }
-
-  /** Slight helper method to add a replace. */
-  protected void replaceFragment(@IdRes int containerViewId, Fragment fragment) {
-    getSupportFragmentManager().beginTransaction().replace(containerViewId, fragment).commit();
   }
 }

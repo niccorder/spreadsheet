@@ -3,7 +3,7 @@
     package="me.niccorder.spreadsheet.app">
 
   <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
   <application
@@ -15,7 +15,8 @@
       android:theme="@style/Theme.Spreadsheet">
     <activity
         android:name="me.niccorder.spreadsheet.app.view.activity.MainActivity"
-        android:theme="@style/Theme.Spreadsheet">
+        android:theme="@style/Theme.Spreadsheet"
+        android:windowSoftInputMode="stateHidden">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 

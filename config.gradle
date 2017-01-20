@@ -18,6 +18,10 @@ ext {
   guavaCollections = "com.google.guava:guava-collections:r03"
   guava = "com.google.guava:guava:20.0"
 
+  def butterknifeVersion = '8.0.1'
+  butterknifeProcessor = "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+  butterknife = "com.jakewharton:butterknife:$butterknifeVersion"
+
   leakCanary = "com.squareup.leakcanary:leakcanary-android:1.5"
   timber = "com.jakewharton.timber:timber:4.0.1"
   jsr = "javax.annotation:jsr250-api:1.0"

@@ -7,16 +7,11 @@
     android:foreground="?photoItemForeground"
     >
 
-  <ImageView
+  <View
       android:id="@+id/profile_cover_image_placeholder"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="?colorPrimary"
-      android:paddingBottom="@dimen/navdrawer_logo_vertical_padding"
-      android:paddingRight="@dimen/navdrawer_logo_padding_right"
-      android:paddingTop="@dimen/navdrawer_logo_vertical_padding"
-      android:scaleType="fitEnd"
-      android:src="@mipmap/ic_launcher"
+      android:background="@drawable/navdrawer_header_gradient"
       />
 
   <ImageView

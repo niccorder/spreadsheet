@@ -1,7 +1,6 @@
 apply from: "$rootDir/config.gradle"
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'realm-android'
 
 repositories {
   jcenter()
@@ -13,14 +12,13 @@ android {
   buildToolsVersion project.ext.buildToolsVersion
 
   defaultConfig {
-    applicationId "me.niccorder.shop.app"
+    applicationId "me.niccorder.spreadsheet.app"
     minSdkVersion project.ext.minSdk
     targetSdkVersion project.ext.targetSdk
     versionCode project.ext.versionCode
     versionName project.ext.versionName
 
     vectorDrawables.useSupportLibrary true
-    buildConfigField 'String', 'BASE_URL', '"http://api.niccorder.me/"'
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
@@ -75,25 +73,21 @@ dependencies {
   compile project.ext.rxbinding_supportv4
   compile project.ext.rxbinding_appcompatv7
   compile project.ext.rxbinding_design
-  compile project.ext.rxbinding_recycler
 
   compile project.ext.leakCanary
   compile project.ext.timber
 
   annotationProcessor project.ext.daggerProcessor
-  annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
-  annotationProcessor 'com.airbnb.android:epoxy-processor:1.5.0'
-  provided 'javax.annotation:jsr250-api:1.0'
+  annotationProcessor project.ext.butterknifeProcessor
+  provided project.ext.jsr
 
   compile project.ext.dagger
-  compile 'com.jakewharton:butterknife:8.0.1'
-  compile 'com.airbnb.android:epoxy:1.5.0'
+  compile project.ext.butterknife
 
   compile project(':spreadsheet-util:spreadsheet-inject')
   compile project(':spreadsheet-util:spreadsheet-exception')
 
-  androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2',
+  androidTestCompile(project.ext.espresso,
       { exclude group: 'com.android.support', module: 'support-annotations' })
-  testCompile 'junit:junit:4.12'
-  compile 'com.android.support:cardview-v7:25.1.0'
+  testCompile project.ext.junit
 }

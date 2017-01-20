@@ -5,16 +5,13 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import butterknife.BindView;
+import butterknife.OnClick;
 import javax.inject.Inject;
 import me.niccorder.spreadsheet.app.R;
 import me.niccorder.spreadsheet.app.di.compontents.ActivityComponent;
@@ -30,11 +27,6 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
   @Inject CellGridPresenterImpl mPresenter;
 
   @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-  @BindView(R.id.container) NestedScrollView mRecyclerParent;
-  @BindView(R.id.recycler) RecyclerView mRecyclerView;
-  @BindView(R.id.new_row_btn) ImageView mAddRowButton;
-  @BindView(R.id.new_column_btn) ImageView mAddColumnButton;
-  @BindView(R.id.fab) FloatingActionButton mFab;
   @BindView(R.id.toolbar) Toolbar mToolbar;
 
   private ActionBarDrawerToggle mActionbarToggler;
@@ -51,7 +43,14 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     injectDependencies();
+    initNavigationDrawer();
+    initTable();
 
+    mPresenter.setView(this);
+  }
+
+  /** Initializes our navigation drawer + our up-navigation. */
+  private void initNavigationDrawer() {
     mActionbarToggler = new DrawerToggler(this, mDrawerLayout, R.string.navdrawer_open_content_desc,
         R.string.navdrawer_closed_content_desc);
     mDrawerLayout.addDrawerListener(mActionbarToggler);
@@ -59,8 +58,11 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
     setSupportActionBar(mToolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     getSupportActionBar().setHomeButtonEnabled(true);
+  }
 
-    mPresenter.setView(this);
+  /** Sets up out recyclerview (spreadsheet) */
+  private void initTable() {
+
   }
 
   @Override protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +101,18 @@ public class MainActivity extends AbstractActivity implements GridView, MenuView
     super.onDestroy();
 
     mPresenter.destroy();
+  }
+
+  @OnClick(R.id.new_row_btn) void onNewRowClicked() {
+    mPresenter.onAddRowClick();
+  }
+
+  @OnClick(R.id.new_column_btn) void onNewColumnClicked() {
+    mPresenter.onAddColumnClick();
+  }
+
+  @OnClick(R.id.fab) void onUndoClicked() {
+    mPresenter.onUndoClick();
   }
 
   @Override public void addRows(int num) {
