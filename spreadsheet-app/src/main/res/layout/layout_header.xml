@@ -39,16 +39,16 @@
         android:layout_height="@dimen/navdrawer_profile_image_size"
         android:layout_marginBottom="@dimen/keyline_1"
         android:layout_marginTop="@dimen/navdrawer_header_icon_margin_top"
-        android:scaleType="centerCrop"
-        app:srcCompat="@drawable/ic_person_black_24dp"
+        android:scaleType="fitCenter"
+        app:srcCompat="@mipmap/ic_my_photo"
         />
 
-    <Spinner
-        android:id="@+id/account_spinner"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/nicholas_corder"
+        style="@style/TextAppearance.Title"
         />
-
   </LinearLayout>
 
 </FrameLayout>
