@@ -14,7 +14,7 @@ public final class DbOpenHelper extends SQLiteOpenHelper {
       + SpreadsheetTable.TABLE
       + "("
       + SpreadsheetTable.ID
-      + " INTEGER NOT NULL PRIMARY KEY,"
+      + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
       + SpreadsheetTable.ROWS
       + " INTEGER NOT NULL DEFAULT 8,"
       + SpreadsheetTable.COLUMNS
@@ -28,7 +28,7 @@ public final class DbOpenHelper extends SQLiteOpenHelper {
       + CellTable.TABLE
       + "("
       + CellTable.ID
-      + " INTEGER NOT NULL PRIMARY KEY,"
+      + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
       + CellTable.POS_X
       + " INTEGER NOT NULL,"
       + CellTable.POS_Y

@@ -62,7 +62,7 @@ import rx.functions.Func1;
       return this;
     }
 
-    public Builder columns(boolean columns) {
+    public Builder columns(int columns) {
       values.put(COLUMNS, columns);
       return this;
     }

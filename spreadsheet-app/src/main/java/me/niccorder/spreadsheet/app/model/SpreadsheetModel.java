@@ -1,5 +1,6 @@
 package me.niccorder.spreadsheet.app.model;
 
+import java.util.ArrayDeque;
 import java.util.Calendar;
 import java.util.Deque;
 import java.util.HashMap;
@@ -37,6 +38,25 @@ public class SpreadsheetModel {
     this.lastEditTimestamp = -1;
     this.data = new HashMap<>();
     this.history = new LinkedList<>();
+  }
+
+  public SpreadsheetModel(long id, long lastEditTimestamp) {
+    this.id = id;
+    this.lastEditTimestamp = lastEditTimestamp;
+  }
+
+  public SpreadsheetModel(long id, int rows, int columns, long lastEditTimestamp) {
+    this.id = id;
+    this.rows = rows;
+    this.columns = columns;
+    this.lastEditTimestamp = lastEditTimestamp;
+    this.data = new HashMap<>();
+    this.history = new LinkedList<>();
+  }
+
+  public SpreadsheetModel(HashMap<Long, CellModel> data, Deque<Long> history) {
+    this.data = data;
+    this.history = history;
   }
 
   public void updateCell(int x, int y, String cellData) {

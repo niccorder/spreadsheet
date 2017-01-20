@@ -106,12 +106,17 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
 
   @Override public void saveGrid() {
     Timber.d("saveGrid()");
-    // TODO: 1/20/17 implement saveGrid
+    datastore.saveSpreadsheet(spreadsheetModel).subscribe(success -> {
+      if (!success) {
+        Timber.e("Could not save the spreadsheet.");
+      } else {
+        spreadsheetModel = new SpreadsheetModel();
+      }
+    });
   }
 
   @Override public void clearGrid() {
     Timber.d("clearGrid()");
-    // TODO: 1/20/17 implement clearGrid
   }
 
   @Override public void onFinishedEditing(String data) {

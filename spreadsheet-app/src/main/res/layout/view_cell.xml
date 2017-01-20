@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="110dp"
     android:layout_height="110dp"
     android:background="?selectableItemBackground"
     >
 
-  <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:ellipsize="marquee"
-        android:padding="@dimen/keyline_1_minus_8dp"
-        android:textSize="16sp"
-        tools:text="@string/placeholder_1_paragraph"
-        />
+  <TextView
+      android:id="@+id/text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:ellipsize="marquee"
+      android:padding="@dimen/keyline_1_minus_8dp"
+      android:textSize="16sp"
+      tools:text="@string/placeholder_1_paragraph"
+      style="@style/TextAppearance.Body1"
+      />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start|left"
-        android:background="@color/io15_white_90"
-        tools:text="A3"
-        />
-  </FrameLayout>
-</RelativeLayout>
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|start|left"
+      android:background="@color/app_io_logo_tint"
+      android:alpha=".8"
+      tools:text="A3"
+      />
+</FrameLayout>

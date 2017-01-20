@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -67,6 +69,7 @@ public class MainActivity extends AbstractActivity implements GridView {
   /* Using Jake Wharton's butterknife. Just saves alot of code bloat for inflating views. */
   @BindView(R.id.coordinator_layout) CoordinatorLayout mCoordinatorLayout;
   @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+  @BindView(R.id.navigation_view) NavigationView mNavigationView;
   @BindView(R.id.spreadsheet) SpreadsheetView mSpreadsheet;
   @BindView(R.id.toolbar) Toolbar mToolbar;
   @BindView(R.id.loading_container) View mLoadingContainer;
@@ -112,6 +115,7 @@ public class MainActivity extends AbstractActivity implements GridView {
     mActionbarToggler = new DrawerToggler(this, mDrawerLayout, R.string.navdrawer_open_content_desc,
         R.string.navdrawer_closed_content_desc);
     mDrawerLayout.addDrawerListener(mActionbarToggler);
+    mNavigationView.setNavigationItemSelectedListener(this::onOptionsItemSelected);
 
     setSupportActionBar(mToolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -227,6 +231,13 @@ public class MainActivity extends AbstractActivity implements GridView {
   @Override public void focusInputField() {
     mEditText.setFocusable(true);
     mEditText.requestFocus();
+
+    // Shows the keyboard.
+    if (getCurrentFocus() != null) {
+      InputMethodManager inputMethodManager =
+          (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+      inputMethodManager.showSoftInput(getCurrentFocus(), 0);
+    }
   }
 
   /** Clears any residual text in the input field */

@@ -7,6 +7,7 @@ import com.squareup.sqlbrite.SqlBrite;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import me.niccorder.spreadsheet.app.BuildConfig;
 import me.niccorder.spreadsheet.app.data.SpreadsheetRepository;
 import me.niccorder.spreadsheet.app.data.persistent.SpreadsheetDatastore;
 import me.niccorder.spreadsheet.app.data.persistent.db.DbOpenHelper;
@@ -33,7 +34,8 @@ import timber.log.Timber;
 
   @Provides @Singleton BriteDatabase provideDatabase(SqlBrite sqlBrite, SQLiteOpenHelper helper) {
     BriteDatabase db = sqlBrite.wrapDatabaseHelper(helper, Schedulers.io());
-    db.setLoggingEnabled(true);
+    db.setLoggingEnabled(BuildConfig.DEBUG);
+
     return db;
   }
 }

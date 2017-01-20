@@ -2,6 +2,7 @@ package me.niccorder.spreadsheet.app.model;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -45,7 +46,14 @@ public class CellModel {
 
   public CellModel(int x, int y, String data) {
     this(x, y);
-    this.history = new LinkedList<>(Arrays.asList(data));
+    this.history = new LinkedList<>(Collections.singletonList(data));
+  }
+
+  public CellModel(long id, int x, int y, String data) {
+    this.id = 0;
+    this.x = x;
+    this.y = y;
+    this.history = new LinkedList<>(Collections.singletonList(data));
   }
 
   /** We are 0-th based, we need to add 1 */
