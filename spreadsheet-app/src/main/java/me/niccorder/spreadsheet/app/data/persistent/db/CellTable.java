@@ -2,6 +2,7 @@ package me.niccorder.spreadsheet.app.data.persistent.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
 import java.util.ArrayList;
@@ -40,6 +41,13 @@ import rx.functions.Func1;
       cursor.close();
     }
   };
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+  }
 
   public static final class Builder {
     private final ContentValues values = new ContentValues();

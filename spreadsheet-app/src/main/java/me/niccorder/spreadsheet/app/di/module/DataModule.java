@@ -7,11 +7,22 @@ import com.squareup.sqlbrite.SqlBrite;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import me.niccorder.spreadsheet.app.data.SpreadsheetRepository;
+import me.niccorder.spreadsheet.app.data.persistent.SpreadsheetDatastore;
 import me.niccorder.spreadsheet.app.data.persistent.db.DbOpenHelper;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 @Module public class DataModule {
+
+  public DataModule() {
+  }
+
+  @Provides @Singleton SpreadsheetRepository provideSpreadsheetRepository(
+      BriteDatabase briteDatabase) {
+    return new SpreadsheetDatastore(briteDatabase);
+  }
+
   @Provides @Singleton SQLiteOpenHelper provideOpenHelper(Application application) {
     return new DbOpenHelper(application);
   }
