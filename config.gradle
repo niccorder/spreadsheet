@@ -51,6 +51,7 @@ ext {
 
   /* Testing dependencies */
   espresso = "com.android.support.test.espresso:espresso-core:2.2.2"
+  mockito = "org.mockito:mockito-core:1.+"
   junit = "junit:junit:4.12"
 
 

@@ -102,4 +102,5 @@
   <string name="navdrawer_closed_content_desc">navdrawer closed.</string>
   <string name="placeholder_1_paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec molestie lacinia felis sed bibendum. Fusce rhoncus ipsum in ligula vehicula fringilla. Sed mattis, sem ut commodo blandit, est leo interdum mauris, eget mattis tortor metus quis mauris. Vivamus id augue malesuada, hendrerit diam luctus, mattis mauris. Praesent interdum orci eget rutrum euismod. Fusce consectetur gravida sapien. Fusce id risus ac justo tristique commodo. Morbi accumsan ex laoreet odio luctus ultricies. Sed nec tortor vitae dui mollis dignissim eu efficitur sem. Ut massa quam, dignissim vitae augue et, aliquet convallis dolor. In arcu lorem, tincidunt vel vehicula in, ultricies eget magna. Nulla eget ultrices eros. Nulla nisl urna, molestie non justo eu, porttitor placerat velit. Nulla tincidunt consectetur risus, non maximus felis ullamcorper ac. Nunc lobortis sit amet lorem eget iaculis.</string>
   <string name="nicholas_corder">Nicholas Corder</string>
+  <string name="new_sheet">New Sheet</string>
 </resources>

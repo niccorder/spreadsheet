@@ -1,11 +1,14 @@
 package me.niccorder.spreadsheet.app.pres.impl;
 
+import java.util.List;
 import javax.inject.Inject;
+import me.niccorder.spreadsheet.app.data.SpreadsheetRepository;
 import me.niccorder.spreadsheet.app.data.persistent.SpreadsheetDatastore;
 import me.niccorder.spreadsheet.app.model.CellModel;
 import me.niccorder.spreadsheet.app.model.SpreadsheetModel;
 import me.niccorder.spreadsheet.app.pres.CellGridPresenter;
 import me.niccorder.spreadsheet.app.view.GridView;
+import rx.functions.Action1;
 import timber.log.Timber;
 
 /**
@@ -18,18 +21,21 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
   private GridView view;
 
   /** Model that represents the current spreadsheet */
-  private SpreadsheetModel spreadsheetModel;
+  SpreadsheetModel spreadsheetModel;
 
   /** Coordinates pointing to the currently focused cell */
-  private int[] currentFocus;
+  int[] currentFocus;
 
   /** Flag that represents if we are editing a cell. */
-  private boolean isEditing;
+  boolean isEditing;
+
+  /** Flag that represents if we are loading a spreadsheet. */
+  boolean isLoading;
 
   /** Our datastore that holds any historic information */
-  private SpreadsheetDatastore datastore;
+  SpreadsheetRepository datastore;
 
-  @Inject public CellGridPresenterImpl(SpreadsheetDatastore datastore) {
+  @Inject public CellGridPresenterImpl(SpreadsheetRepository datastore) {
     this.datastore = datastore;
     this.spreadsheetModel = new SpreadsheetModel();
     this.currentFocus = new int[2];
@@ -62,19 +68,27 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
   }
 
   @Override public void onCellClick(int x, int y) {
+    if (isEditing) {
+      view.unfocusPosition(currentFocus[0], currentFocus[1]);
+      spreadsheetModel.updateCell(currentFocus[0], currentFocus[1], view.getCurrentInputText());
+    }
+
     isEditing = true;
     currentFocus[0] = x;
     currentFocus[1] = y;
 
     view.focusPosition(x, y);
+    view.setCurrentInput(spreadsheetModel.getCellData(x, y));
     view.focusInputField();
   }
 
   @Override public void addRow() {
+    spreadsheetModel.setRows(spreadsheetModel.getRows() + 1);
     view.addRows(1);
   }
 
   @Override public void addColumn() {
+    spreadsheetModel.setRows(spreadsheetModel.getColumns() + 1);
     view.addColumns(1);
   }
 
@@ -92,17 +106,43 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
 
   @Override public void saveGrid() {
     Timber.d("saveGrid()");
+    // TODO: 1/20/17 implement saveGrid
   }
 
   @Override public void clearGrid() {
+    Timber.d("clearGrid()");
+    // TODO: 1/20/17 implement clearGrid
   }
 
-  @Override public void onFinishedEditing() {
+  @Override public void onFinishedEditing(String data) {
+    if (!isEditing) return;
+
+    spreadsheetModel.updateCell(currentFocus[0], currentFocus[1], data);
+    view.unfocusPosition(currentFocus[0], currentFocus[1]);
     view.clearInputField();
     view.closeEdit();
   }
 
-  @Override public void loadGrid() {
+  @Override public void loadGrid(long id) {
+    if (isLoading) return;
 
+    isLoading = true;
+    view.showLoading(true);
+    datastore.loadSpreadsheet(id).subscribe(spreadsheet -> {
+      spreadsheetModel = spreadsheet;
+      isLoading = false;
+      view.showLoading(false);
+    }, throwable -> {
+      Timber.w(throwable, "loadGrid Failure.");
+      isLoading = false;
+      view.showLoading(false);
+      view.showDataRetrievalError(true);
+    });
+  }
+
+  @Override public void onLoadSelected() {
+    datastore.getSavedSpreadsheets().subscribe(spreadsheetModels -> {
+      view.showAvailableSpreadsheets(spreadsheetModels);
+    }, throwable -> Timber.wtf(throwable, "onLoadSelected()"));
   }
 }

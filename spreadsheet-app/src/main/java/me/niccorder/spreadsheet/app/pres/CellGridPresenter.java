@@ -20,9 +20,11 @@ public interface CellGridPresenter<T extends GridView & MenuView> extends Presen
 
   void saveGrid();
 
-  void loadGrid();
+  void onLoadSelected();
+
+  void loadGrid(long id);
 
   void clearGrid();
 
-  void onFinishedEditing();
+  void onFinishedEditing(String data);
 }

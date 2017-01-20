@@ -1,34 +1,52 @@
 package me.niccorder.spreadsheet.app.view.activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import butterknife.BindView;
 import butterknife.OnClick;
+import com.jakewharton.rxbinding.widget.RxTextView;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import javax.inject.Inject;
 import me.niccorder.spreadsheet.app.R;
 import me.niccorder.spreadsheet.app.di.compontents.ActivityComponent;
 import me.niccorder.spreadsheet.app.di.compontents.DaggerActivityComponent;
 import me.niccorder.spreadsheet.app.di.module.ActivityModule;
+import me.niccorder.spreadsheet.app.model.SpreadsheetModel;
 import me.niccorder.spreadsheet.app.pres.CellGridPresenter;
 import me.niccorder.spreadsheet.app.pres.impl.CellGridPresenterImpl;
 import me.niccorder.spreadsheet.app.view.GridView;
 import me.niccorder.spreadsheet.app.view.MenuView;
 import me.niccorder.spreadsheet.app.view.ui.SpreadsheetView;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -51,6 +69,7 @@ public class MainActivity extends AbstractActivity implements GridView {
   @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
   @BindView(R.id.spreadsheet) SpreadsheetView mSpreadsheet;
   @BindView(R.id.toolbar) Toolbar mToolbar;
+  @BindView(R.id.loading_container) View mLoadingContainer;
   @BindView(R.id.input) EditText mEditText;
 
   /** Used in unison with the nav drawer to provide a nice up animation + handles our drawer */
@@ -128,7 +147,7 @@ public class MainActivity extends AbstractActivity implements GridView {
         mPresenter.saveGrid();
         return true;
       case R.id.item_load:
-        mPresenter.loadGrid();
+        mPresenter.loadGrid(10);
         return true;
       case R.id.item_clear:
         mPresenter.clearGrid();
@@ -231,15 +250,67 @@ public class MainActivity extends AbstractActivity implements GridView {
   }
 
   @Override public void onItemClicked(int position) {
-
+    switch (position) {
+      case 0:
+        Timber.d("save()");
+        mPresenter.saveGrid();
+        break;
+      case 1:
+        Timber.d("new()");
+        break;
+      case 2:
+        Timber.d("load()");
+        mPresenter.onLoadSelected();
+        break;
+      case 3:
+        Timber.d("clear()");
+        break;
+    }
   }
 
   @Override public void selectItem(int position) {
-
+    // not needed.
   }
 
   @Override public void showLoading(boolean show) {
+    mLoadingContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+  }
 
+  @Override public String getCurrentInputText() {
+    return TextUtils.isEmpty(mEditText.getText()) ? null : mEditText.getText().toString();
+  }
+
+  @Override public void setCurrentInput(String data) {
+    mEditText.setText(data);
+  }
+
+  @Override public void showAvailableSpreadsheets(List<SpreadsheetModel> available) {
+    Observable.from(available)
+        .map(spreadsheetModel -> convertMilisecondsToDate(spreadsheetModel.getLastEditTimestamp()))
+        .toList()
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(list -> {
+          showAvailableDialog(list, available);
+        }, throwable -> Timber.wtf(throwable,
+            "Had trouble showing the possible past spreadsheets."));
+  }
+
+  private String convertMilisecondsToDate(final long millis) {
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+    // Create a calendar object that will convert the date and time value in milliseconds to date.
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(millis);
+    return formatter.format(calendar.getTime());
+  }
+
+  private void showAvailableDialog(List<String> items, List<SpreadsheetModel> models) {
+    new AlertDialog.Builder(this).setAdapter(
+        new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items), (dialog, which) -> {
+          mPresenter.loadGrid(models.get(which).getId());
+          dialog.dismiss();
+        }).show();
   }
 
   /** If we had trouble retrieving/parsing/loading the saved spreadsheet, show a message. */
@@ -269,7 +340,8 @@ public class MainActivity extends AbstractActivity implements GridView {
       invalidateOptionsMenu();
 
       // If the user opens the drawer while editing, notify the presenter that we are no longer editing.
-      mPresenter.onFinishedEditing();
+      mPresenter.onFinishedEditing(
+          TextUtils.isEmpty(mEditText.getText()) ? null : mEditText.getText().toString());
     }
 
     @Override public void onDrawerClosed(View drawerView) {

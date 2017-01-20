@@ -47,6 +47,12 @@ public class SpreadsheetModel {
     data.put(key, new CellModel(x, y, cellData));
   }
 
+  public String getCellData(int x, int y) {
+    long key = (x + 1) * (y + 1);
+    final CellModel model = !data.containsKey(key) ? new CellModel() : data.get(key);
+    return model.getCurrentData();
+  }
+
   public CellModel undo() {
     if (history.size() <= 0) {
       return null;

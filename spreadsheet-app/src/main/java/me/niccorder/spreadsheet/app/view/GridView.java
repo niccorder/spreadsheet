@@ -1,5 +1,8 @@
 package me.niccorder.spreadsheet.app.view;
 
+import java.util.List;
+import me.niccorder.spreadsheet.app.model.SpreadsheetModel;
+
 /**
  * Our contract for our GridView. We set it up as an interface since it allows us to easily inject
  * a mock object for testing, or different implementations of our contract. This would be good for
@@ -28,4 +31,10 @@ public interface GridView extends MenuView {
   void updatePositionText(int x, int y, String text);
 
   void showNoMoreUndoMessage();
+
+  void showAvailableSpreadsheets(List<SpreadsheetModel> available);
+
+  String getCurrentInputText();
+
+  void setCurrentInput(String data);
 }

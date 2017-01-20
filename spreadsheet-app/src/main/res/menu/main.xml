@@ -2,14 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
   <item
-      android:id="@+id/item_load"
-      android:icon="@drawable/search_24dp"
-      android:title="@string/load"/>
-
-  <item
       android:id="@+id/item_save"
       android:icon="@drawable/ic_save_black_24dp"
       android:title="@string/save"/>
+
+  <item
+      android:id="@+id/item_new"
+      android:icon="@drawable/ic_add_black_24dp"
+      android:title="@string/new_sheet"/>
+
+  <item
+      android:id="@+id/item_load"
+      android:icon="@drawable/search_24dp"
+      android:title="@string/load"/>
 
   <item
       android:id="@+id/item_clear"
