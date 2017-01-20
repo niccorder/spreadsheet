@@ -2,6 +2,8 @@ package me.niccorder.spreadsheet.app.data.persistent;
 
 import android.database.Cursor;
 import com.squareup.sqlbrite.BriteDatabase;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import me.niccorder.spreadsheet.app.data.SpreadsheetRepository;
 import me.niccorder.spreadsheet.app.data.persistent.db.CellTable;
@@ -15,6 +17,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class SpreadsheetDatastore implements SpreadsheetRepository {
 
@@ -33,15 +36,26 @@ public class SpreadsheetDatastore implements SpreadsheetRepository {
               cursor -> new SpreadsheetModel(cursor.getLong(0), cursor.getInt(1), cursor.getInt(2),
                   cursor.getLong(3)))
           .subscribe(spreadsheetModel -> {
-            //database.createQuery(CellTable.TABLE,
-            //    "SELECT * WHERE " + CellTable.SPREADSHEET_ID + " = ?", Long.toString(id))
-            //    .mapToOne(new Func1<Cursor, CellModel>() {
-            //      @Override public CellModel call(Cursor cursor) {
-            //        return new CellModel();
-            //      }
-            //    });
+            database.createQuery(CellTable.TABLE, "SELECT "
+                + CellTable.POS_X
+                + ", "
+                + CellTable.POS_Y
+                + ", "
+                + CellTable.DATA
+                + " FROM "
+                + CellTable.TABLE
+                + " WHERE "
+                + CellTable.SPREADSHEET_ID
+                + " = ?", Long.toString(id))
+                .mapToList(cursor -> new CellModel(cursor.getInt(0), cursor.getInt(1),
+                    cursor.getString(2)))
+                .subscribe(cellModels -> {
+                  Timber.i(Arrays.toString(cellModels.toArray()));
+                  spreadsheetModel.setCells(cellModels);
+                  subscriber.onNext(spreadsheetModel);
+                });
           });
-    });
+    }).observeOn(AndroidSchedulers.mainThread()).cast(SpreadsheetModel.class);
   }
 
   @Override public Observable<List<SpreadsheetModel>> getSavedSpreadsheets() {
@@ -61,18 +75,25 @@ public class SpreadsheetDatastore implements SpreadsheetRepository {
   @Override public Observable<Boolean> saveSpreadsheet(SpreadsheetModel spreadsheet) {
     return Observable.create(subscriber -> {
       if (spreadsheet.getId() == -1) {
-        database.insert(SpreadsheetTable.TABLE,
+        spreadsheet.setId(database.insert(SpreadsheetTable.TABLE,
             new SpreadsheetTable.Builder().columns(spreadsheet.getColumns())
                 .rows(spreadsheet.getRows())
-                .build());
+                .build()));
       } else {
         database.update(SpreadsheetTable.TABLE,
             new SpreadsheetTable.Builder().columns(spreadsheet.getColumns())
                 .rows(spreadsheet.getRows())
-                .build(), "WHERE " + SpreadsheetTable.ID + " = ?",
-            Long.toString(spreadsheet.getId()));
+                .build(), SpreadsheetTable.ID + " = ?", Long.toString(spreadsheet.getId()));
       }
 
+      final Collection<CellModel> cells = spreadsheet.getCells();
+      for (CellModel cell : cells) {
+        database.insert(CellTable.TABLE, new CellTable.Builder().x(cell.getX())
+            .y(cell.getY())
+            .data(cell.getCurrentData())
+            .spreadsheetId((int) spreadsheet.getId())
+            .build());
+      }
       subscriber.onNext(true);
     }).observeOn(AndroidSchedulers.mainThread()).cast(Boolean.class);
   }

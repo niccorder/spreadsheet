@@ -15,6 +15,7 @@ import rx.functions.Func1;
   public static final String ID = "_id";
   public static final String POS_X = "pos_x";
   public static final String POS_Y = "pos_y";
+  public static final String DATA = "data";
   public static final String SPREADSHEET_ID = "spreadsheet_id";
 
   public abstract long id();
@@ -64,6 +65,11 @@ import rx.functions.Func1;
 
     public Builder y(int y) {
       values.put(POS_Y, y);
+      return this;
+    }
+
+    public Builder data(String data) {
+      values.put(DATA, data);
       return this;
     }
 

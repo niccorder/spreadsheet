@@ -33,6 +33,8 @@ public final class DbOpenHelper extends SQLiteOpenHelper {
       + " INTEGER NOT NULL,"
       + CellTable.POS_Y
       + " INTEGER NOT NULL,"
+      + CellTable.DATA
+      + " TEXT,"
       + CellTable.SPREADSHEET_ID
       + " INTEGER NOT NULL REFERENCES "
       + SpreadsheetTable.TABLE

@@ -171,13 +171,8 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
     view.addColumns(8 - cols);
 
     // Set loaded data to grid.
-    for (int i = 0; i < rows; ++i) {
-      for (int j = 0; j < cols; ++j) {
-        final String data = spreadsheetModel.getCellData(i, j);
-        Timber.d("loading (%d, %d) = %s", i, j, data);
-
-        view.updatePositionText(i, j, data);
-      }
+    for (CellModel c : spreadsheetModel.getCells()) {
+      view.updatePositionText(c.getX(), c.getY(), c.getCurrentData());
     }
   }
 

@@ -46,7 +46,8 @@ public class CellModel {
 
   public CellModel(int x, int y, String data) {
     this(x, y);
-    this.history = new LinkedList<>(Collections.singletonList(data));
+    this.history = new LinkedList<>();
+    this.history.push(data);
   }
 
   public CellModel(long id, int x, int y, String data) {
@@ -106,5 +107,14 @@ public class CellModel {
 
   public void setY(int y) {
     this.y = y;
+  }
+
+  @Override public String toString() {
+    return "CellModel{" +
+        "id=" + id +
+        ", history=" + history +
+        ", x=" + x +
+        ", y=" + y +
+        '}';
   }
 }

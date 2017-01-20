@@ -2,9 +2,13 @@ package me.niccorder.spreadsheet.app.model;
 
 import java.util.ArrayDeque;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import timber.log.Timber;
 
 /**
  * Basic model that represents a spreadsheet. This is also our representation when we store this
@@ -54,13 +58,15 @@ public class SpreadsheetModel {
     this.history = new LinkedList<>();
   }
 
-  public SpreadsheetModel(HashMap<Long, CellModel> data, Deque<Long> history) {
-    this.data = data;
-    this.history = history;
+  public void setCells(List<CellModel> cells) {
+    for (CellModel c : cells) {
+      Timber.d(c.toString());
+      data.put(c.getId(), c);
+    }
   }
 
   public void updateCell(int x, int y, String cellData) {
-    long key = (x + 1) * (y + 1);
+    long key = (x + 1) * (y + 1) * (x >= y ? 1 : -1);
     final CellModel model = !data.containsKey(key) ? new CellModel(x, y) : data.get(key);
 
     model.updateData(cellData);
@@ -69,8 +75,12 @@ public class SpreadsheetModel {
     data.put(key, model);
   }
 
+  public Collection<CellModel> getCells() {
+    return data.values();
+  }
+
   public String getCellData(int x, int y) {
-    long key = (x + 1) * (y + 1);
+    long key = (x + 1) * (y + 1) * (x >= y ? 1 : -1);
     final CellModel model = !data.containsKey(key) ? new CellModel() : data.get(key);
     return model.getCurrentData();
   }
