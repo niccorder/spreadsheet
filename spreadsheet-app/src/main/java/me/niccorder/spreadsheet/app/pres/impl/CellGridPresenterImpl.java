@@ -71,6 +71,7 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
     if (isEditing) {
       view.unfocusPosition(currentFocus[0], currentFocus[1]);
       spreadsheetModel.updateCell(currentFocus[0], currentFocus[1], view.getCurrentInputText());
+      view.updatePositionText(currentFocus[0], currentFocus[1], view.getCurrentInputText());
     }
 
     isEditing = true;
@@ -83,11 +84,13 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
   }
 
   @Override public void addRow() {
+    Timber.d("addColumn()");
     spreadsheetModel.setRows(spreadsheetModel.getRows() + 1);
     view.addRows(1);
   }
 
   @Override public void addColumn() {
+    Timber.d("addColumn()");
     spreadsheetModel.setRows(spreadsheetModel.getColumns() + 1);
     view.addColumns(1);
   }
@@ -101,7 +104,9 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
       return;
     }
 
-    view.updatePositionText(poppedModel.getX(), poppedModel.getY(), poppedModel.undo());
+    final String previousData = poppedModel.undo();
+    Timber.d("Update cell (%d, %d) = %s", poppedModel.getX(), poppedModel.getY(), previousData);
+    view.updatePositionText(poppedModel.getX(), poppedModel.getY(), previousData);
   }
 
   @Override public void saveGrid() {
@@ -109,23 +114,27 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
     datastore.saveSpreadsheet(spreadsheetModel).subscribe(success -> {
       if (!success) {
         Timber.e("Could not save the spreadsheet.");
+        view.showDataRetrievalError(true);
       } else {
         spreadsheetModel = new SpreadsheetModel();
+        view.clearGrid();
       }
-    });
+    }, throwable -> Timber.e(throwable, "saveGrid()"));
   }
 
   @Override public void clearGrid() {
-    Timber.d("clearGrid()");
+    view.clearGrid();
   }
 
   @Override public void onFinishedEditing(String data) {
     if (!isEditing) return;
 
+    Timber.d("onFinishedEditing()");
     spreadsheetModel.updateCell(currentFocus[0], currentFocus[1], data);
     view.unfocusPosition(currentFocus[0], currentFocus[1]);
     view.clearInputField();
     view.closeEdit();
+    isEditing = false;
   }
 
   @Override public void loadGrid(long id) {
@@ -143,6 +152,10 @@ public class CellGridPresenterImpl implements CellGridPresenter<GridView> {
       view.showLoading(false);
       view.showDataRetrievalError(true);
     });
+  }
+
+  private void parseLoadedData(final SpreadsheetModel model) {
+    // TODO: 1/20/17  
   }
 
   @Override public void onLoadSelected() {

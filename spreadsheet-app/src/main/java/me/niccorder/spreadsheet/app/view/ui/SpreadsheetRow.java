@@ -16,9 +16,10 @@ import timber.log.Timber;
   private static int ROW_COUNT = 0;
   private static final int MIN_COLUMNS = 8;
 
-  private final ArrayList<CellView> cells;
+  /* package private */ final ArrayList<CellView> cells;
+  /* package private */ int rowNumber;
+
   private OnRowClickListener internalListener;
-  private int rowNumber;
   private int verticalMargin;
 
   private static int getRowNumber() {
@@ -85,6 +86,22 @@ import timber.log.Timber;
 
   /* package private */ void setCellText(int y, String text) {
     cells.get(y).setData(text);
+  }
+
+  /* package private */ void clearRow() {
+
+    // Clear all cells within default range.
+    for (int i = 0; i < 8; ++i) {
+      cells.get(i).clearCell();
+    }
+
+    // Remove all cells outside default range.
+    while (cells.size() > 8) {
+      cells.remove(8);
+    }
+
+    // Paint on screen.
+    requestLayout();
   }
 
   private void handleCellClick(CellView cell) {

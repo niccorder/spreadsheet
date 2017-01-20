@@ -85,6 +85,22 @@ public class SpreadsheetView extends TableLayout {
     }
   }
 
+  /** Clear the currently displayed grid. */
+  public void clearGrid() {
+    // Clear all rows within the default bounds.
+    for (int i = 0; i < 8; ++i) {
+      rows.get(i).clearRow();
+    }
+
+    // Remove all rows outside of the default bounds.
+    while (rows.size() > 8) {
+      rows.remove(8);
+    }
+
+    // Paint the changes on screen.
+    requestLayout();
+  }
+
   public interface OnCellClickListener {
     void onCellClick(int x, int y);
   }

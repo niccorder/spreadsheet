@@ -69,6 +69,11 @@ import me.niccorder.spreadsheet.app.R;
     }
   }
 
+  /* package private */ void clearCell() {
+    setSelected(false);
+    this.data = null;
+  }
+
   /* package private */ int getCellPositionX() {
     return x;
   }

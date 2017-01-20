@@ -146,15 +146,19 @@ public class MainActivity extends AbstractActivity implements GridView {
       return true;
     }
 
+    mDrawerLayout.closeDrawers();
     switch (item.getItemId()) {
       case R.id.item_save:
-        mPresenter.saveGrid();
+        onItemClicked(0);
+        return true;
+      case R.id.item_new:
+        onItemClicked(1);
         return true;
       case R.id.item_load:
-        mPresenter.loadGrid(10);
+        onItemClicked(2);
         return true;
       case R.id.item_clear:
-        mPresenter.clearGrid();
+        onItemClicked(3);
         return true;
     }
 
@@ -268,6 +272,8 @@ public class MainActivity extends AbstractActivity implements GridView {
         break;
       case 1:
         Timber.d("new()");
+        mPresenter.clearGrid();
+        mPresenter.saveGrid();
         break;
       case 2:
         Timber.d("load()");
@@ -275,6 +281,7 @@ public class MainActivity extends AbstractActivity implements GridView {
         break;
       case 3:
         Timber.d("clear()");
+        mPresenter.clearGrid();
         break;
     }
   }
@@ -296,11 +303,11 @@ public class MainActivity extends AbstractActivity implements GridView {
   }
 
   @Override public void showAvailableSpreadsheets(List<SpreadsheetModel> available) {
+    Timber.d("showAvailableSpreadsheets(%d)", available.size());
+
     Observable.from(available)
         .map(spreadsheetModel -> convertMilisecondsToDate(spreadsheetModel.getLastEditTimestamp()))
         .toList()
-        .subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(list -> {
           showAvailableDialog(list, available);
         }, throwable -> Timber.wtf(throwable,
@@ -308,6 +315,7 @@ public class MainActivity extends AbstractActivity implements GridView {
   }
 
   private String convertMilisecondsToDate(final long millis) {
+    Timber.d("convertMilisecondsToDate(%d)", millis);
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
     // Create a calendar object that will convert the date and time value in milliseconds to date.
@@ -317,19 +325,25 @@ public class MainActivity extends AbstractActivity implements GridView {
   }
 
   private void showAvailableDialog(List<String> items, List<SpreadsheetModel> models) {
-    new AlertDialog.Builder(this).setAdapter(
+    Timber.d("showAvailableDialog()");
+    new AlertDialog.Builder(this, R.style.Theme_Spreadsheet_Light).setAdapter(
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items), (dialog, which) -> {
           mPresenter.loadGrid(models.get(which).getId());
           dialog.dismiss();
-        }).show();
+        }).setTitle(R.string.previous_saves_choose_one).show();
   }
 
   /** If we had trouble retrieving/parsing/loading the saved spreadsheet, show a message. */
   @Override public void showDataRetrievalError(boolean show) {
-    Snackbar.make(mCoordinatorLayout, "We had trouble spreadsheet.", Snackbar.LENGTH_LONG)
-        .setAction("Retry", v -> Timber.i("Retry loading."))
+    Snackbar.make(mCoordinatorLayout, R.string.error_opening_spreadsheet, Snackbar.LENGTH_LONG)
+        .setAction("Retry", v -> mPresenter.onLoadSelected())
         .setActionTextColor(ContextCompat.getColor(this, R.color.app_green))
         .show();
+  }
+
+  @Override public void clearGrid() {
+    mSpreadsheet.clearGrid();
+    mSpreadsheet.scrollTo(0, 0);
   }
 
   /** A requirement for using the navigationo drawer layout */

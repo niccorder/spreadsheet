@@ -11,8 +11,10 @@ import me.niccorder.spreadsheet.app.model.SpreadsheetModel;
 import me.niccorder.spreadsheet.util.exception.NotYetImplementedException;
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class SpreadsheetDatastore implements SpreadsheetRepository {
 
@@ -43,13 +45,17 @@ public class SpreadsheetDatastore implements SpreadsheetRepository {
   }
 
   @Override public Observable<List<SpreadsheetModel>> getSavedSpreadsheets() {
-    return database.createQuery(SpreadsheetTable.TABLE, "SELECT ("
+    return database.createQuery(SpreadsheetTable.TABLE, "SELECT "
         + SpreadsheetTable.ID
         + ", "
         + SpreadsheetTable.LAST_EDIT_TIMESTAMP
-        + ") ORDER BY "
+        + " FROM "
+        + SpreadsheetTable.TABLE
+        + " ORDER BY "
         + SpreadsheetTable.LAST_EDIT_TIMESTAMP
-        + " ASC").mapToList(cursor -> new SpreadsheetModel(cursor.getLong(0), cursor.getLong(1)));
+        + " ASC")
+        .mapToList(cursor -> new SpreadsheetModel(cursor.getLong(0), cursor.getLong(1)))
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   @Override public Observable<Boolean> saveSpreadsheet(SpreadsheetModel spreadsheet) {
@@ -68,7 +74,7 @@ public class SpreadsheetDatastore implements SpreadsheetRepository {
       }
 
       subscriber.onNext(true);
-    });
+    }).observeOn(AndroidSchedulers.mainThread()).cast(Boolean.class);
   }
 
   @Override public Observable<Boolean> deleteSpreadsheet(long id) {
@@ -76,6 +82,6 @@ public class SpreadsheetDatastore implements SpreadsheetRepository {
       subscriber.onNext(
           database.delete(SpreadsheetTable.TABLE, "WHERE " + SpreadsheetTable.ID + " = ?",
               Long.toString(id)) != 0);
-    });
+    }).observeOn(AndroidSchedulers.mainThread()).cast(Boolean.class);
   }
 }

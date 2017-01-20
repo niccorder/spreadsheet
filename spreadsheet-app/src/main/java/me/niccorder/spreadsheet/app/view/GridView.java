@@ -16,6 +16,8 @@ public interface GridView extends MenuView {
 
   void clearPosition(int x, int y);
 
+  void clearGrid();
+
   void onPositionClick(int x, int y);
 
   void closeEdit();
