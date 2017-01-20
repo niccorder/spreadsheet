@@ -1,18 +1,62 @@
 package me.niccorder.spreadsheet.app.model;
 
+import java.util.Calendar;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 /**
- * Basic model that represents a spreadsheet.
+ * Basic model that represents a spreadsheet. This is also our representation when we store this
+ * info to persist it against application opens.
  */
 public class SpreadsheetModel {
 
   /** Used for persisting data */
   private long id;
 
-  /** Used for displaying 'most current' */
-  private long lastEdit;
+  /** The number of rows in this spreadsheet */
+  private int rows;
 
-  /** The data itself. */
-  private CellModel[][] spreadsheet;
+  /** The number of columns in this spreadsheet */
+  private int columns;
+
+  /** Used for displaying 'most current' */
+  private long lastEditTimestamp;
+
+  /**
+   * Since the data can be sparse we use a {@link HashMap<Long, CellModel>} and hash against {@link
+   * CellModel#id} since it is unique.
+   */
+  private HashMap<Long, CellModel> data;
+
+  /** Holds our global edit history. */
+  private Deque<Long> history;
+
+  public SpreadsheetModel() {
+    this.id = -1;
+    this.lastEditTimestamp = -1;
+    this.data = new HashMap<>();
+    this.history = new LinkedList<>();
+  }
+
+  public void updateCell(int x, int y, String cellData) {
+    long key = (x + 1) * (y + 1);
+    final CellModel model = !data.containsKey(key) ? new CellModel() : data.get(key);
+
+    setLastEditTimestamp();
+    data.put(key, new CellModel(x, y, cellData));
+  }
+
+  public CellModel undo() {
+    if (history.size() <= 0) {
+      return null;
+    }
+
+    setLastEditTimestamp();
+    final CellModel model = data.get(history.pop());
+    model.undo();
+    return model;
+  }
 
   public long getId() {
     return id;
@@ -22,19 +66,33 @@ public class SpreadsheetModel {
     this.id = id;
   }
 
-  public long getLastEdit() {
-    return lastEdit;
+  public long getLastEditTimestamp() {
+    return lastEditTimestamp;
   }
 
-  public void setLastEdit(long lastEdit) {
-    this.lastEdit = lastEdit;
+  public void setLastEditTimestamp() {
+    lastEditTimestamp = Calendar.getInstance().getTimeInMillis();
   }
 
-  public CellModel[][] getSpreadsheet() {
-    return spreadsheet;
+  public int getRows() {
+    return rows;
   }
 
-  public void setSpreadsheet(CellModel[][] spreadsheet) {
-    this.spreadsheet = spreadsheet;
+  public void setRows(int rows) {
+    if (this.rows != rows && this.rows != 0) {
+      setLastEditTimestamp();
+    }
+    this.rows = rows;
+  }
+
+  public int getColumns() {
+    return columns;
+  }
+
+  public void setColumns(int columns) {
+    if (this.columns != columns && this.columns != 0) {
+      setLastEditTimestamp();
+    }
+    this.columns = columns;
   }
 }
